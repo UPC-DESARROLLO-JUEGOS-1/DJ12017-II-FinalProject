@@ -22,7 +22,7 @@ public:
 	void addQuad(NRect rect, NColor color, NRect UV);
 	void addQuad(float x, float y);
 	void addQuad(float x, float y, NRect UV);
-	void addQuad(float x, float y, float rotation, NRect UV);
+	void addQuad(float x, float y, float rotation, NRect UV, Vector2 scale);
 	void addQuad(float x, float y, NColor color);
 	void addQuad(float x, float y, NColor color, NRect UV);
 	void addQuad(float x, float y, float width, float height);

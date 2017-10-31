@@ -360,41 +360,102 @@ void NSpriteBatch::addQuad(float x, float y, NRect UV)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void NSpriteBatch::addQuad(float x, float y, float rotation, NRect UV)
+void NSpriteBatch::addQuad(float x, float y, float rotation, NRect UV, Vector2 scale)
 {
 	UVBox.x = UV.x / mContent->GetWidth();
 	UVBox.y = UV.y / mContent->GetHeight();
 	UVBox.w = (UV.x + UV.w) / mContent->GetWidth();
 	UVBox.h = (UV.y + UV.h) / mContent->GetHeight();
 
+	float tx = UV.w;
+	float ty = UV.h;
+
+	float cosAngle = cosf(rotation);
+	float sinAngle = sinf(rotation);
+
+	float x_0 = x + UV.w;
+	float x_1 = x;
+	float x_2 = x;
+	float x_3 = x + UV.w;
+
+	float y_0 = y + UV.h;
+	float y_1 = y + UV.h;
+	float y_2 = y;
+	float y_3 = y;
+
+	float centerX = (x_0 + x_1 + x_2 + x_3) / 4.0;
+	float centerY = (y_0 + y_1 + y_2 + y_3) / 4.0;
+
+	x_0 -= centerX;
+	x_1 -= centerX;
+	x_2 -= centerX;
+	x_3 -= centerX;
+
+	y_0 -= centerY;
+	y_1 -= centerY;
+	y_2 -= centerY;
+	y_3 -= centerY;
+
+	float _x_0 = x_0;
+	float _x_1 = x_1;
+	float _x_2 = x_2;
+	float _x_3 = x_3;
+
+	float _y_0 = y_0;
+	float _y_1 = y_1;
+	float _y_2 = y_2;
+	float _y_3 = y_3;
+
+	x_0 = (cosAngle * _x_0 - sinAngle * _y_0);
+	y_0 = (sinAngle * _x_0 + cosAngle * _y_0);
+
+	x_1 = (cosAngle * _x_1 - sinAngle * _y_1);
+	y_1 = (sinAngle * _x_1 + cosAngle * _y_1);
+
+	x_2 = (cosAngle * _x_2 - sinAngle * _y_2);
+	y_2 = (sinAngle * _x_2 + cosAngle * _y_2);
+
+	x_3 = (cosAngle * _x_3 - sinAngle * _y_3);
+	y_3 = (sinAngle * _x_3 + cosAngle * _y_3);
+
+	x_0 += centerX;
+	x_1 += centerX;
+	x_2 += centerX;
+	x_3 += centerX;
+
+	y_0 += centerY;
+	y_1 += centerY;
+	y_2 += centerY;
+	y_3 += centerY;
+
 	dtSpriteVertex vertex[6];
-	vertex[0].SetPosition(x + UV.w * cos(rotation), y + UV.h);
+	vertex[0].SetPosition(x_0, y_0);
 	vertex[0].SetColor(255, 255, 255, 255);
 	vertex[0].SetUV(UVBox.w, UVBox.h);
 	vertexData.push_back(vertex[0]);
 
-	vertex[1].SetPosition(x, y + UV.h);
+	vertex[1].SetPosition(x_1, y_1);
 	vertex[1].SetColor(255, 255, 255, 255);
 	vertex[1].SetUV(UVBox.x, UVBox.h);
 	vertexData.push_back(vertex[1]);
 
-	vertex[2].SetPosition(x, y);
+	vertex[2].SetPosition(x_2, y_2);
 	vertex[2].SetColor(255, 255, 255, 255);
 	vertex[2].SetUV(UVBox.x, UVBox.y);
 	vertexData.push_back(vertex[2]);
 
 	// seg triangulo
-	vertex[3].SetPosition(x, y);
+	vertex[3].SetPosition(x_2, y_2);
 	vertex[3].SetColor(255, 255, 255, 255);
 	vertex[3].SetUV(UVBox.x, UVBox.y);
 	vertexData.push_back(vertex[3]);
 
-	vertex[4].SetPosition(x + UV.w, y);
+	vertex[4].SetPosition(x_3, y_3);
 	vertex[4].SetColor(255, 255, 255, 255);
 	vertex[4].SetUV(UVBox.w, UVBox.y);
 	vertexData.push_back(vertex[4]);
 
-	vertex[5].SetPosition(x + UV.w, y + UV.h);
+	vertex[5].SetPosition(x_0, y_0);
 	vertex[5].SetColor(255, 255, 255, 255);
 	vertex[5].SetUV(UVBox.w, UVBox.h);
 	vertexData.push_back(vertex[5]);
